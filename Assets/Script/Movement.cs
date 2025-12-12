@@ -4,13 +4,24 @@ using UnityEngine.InputSystem;
 
 public class Movement : MonoBehaviour
 {
+
+    //Variables//
     [SerializeField] InputAction thrust;
     [SerializeField] InputAction rotation;
     [SerializeField] float ThrustStrength = 100f;
     [SerializeField] float rotationStrength = 100f;
-    Rigidbody rb;
+    [SerializeField] AudioClip mainEngineSFX;
 
+    [SerializeField] ParticleSystem mainBooster;
+    [SerializeField] ParticleSystem leftBooster;
+    [SerializeField] ParticleSystem rightBooster;
+    //Variables//
+
+    //Chache//
+    Rigidbody rb;
     AudioSource audioSource;
+    //Chache//
+
 
     void Start()
     {
@@ -37,12 +48,17 @@ public class Movement : MonoBehaviour
 
             if (!audioSource.isPlaying)
             {
-                audioSource.Play();
+                audioSource.PlayOneShot(mainEngineSFX);
+            }
+            if(!mainBooster.isPlaying)
+            {
+                mainBooster.Play();
             }
         }
         else
         {
             audioSource.Stop();
+            mainBooster.Stop();
         }
 
     }
@@ -53,10 +69,27 @@ public class Movement : MonoBehaviour
         if(rotationInput < 0)
         {
             ApplyRotation(rotationStrength);
+
+            if(!rightBooster.isPlaying)
+            {
+                leftBooster.Stop();
+                rightBooster.Play();
+            }
         }
         else if(rotationInput > 0)
         {
             ApplyRotation(-rotationStrength);
+
+            if(!leftBooster.isPlaying)
+            {
+                rightBooster.Stop();
+                leftBooster.Play();
+            }
+        }
+        else
+        {
+            rightBooster.Stop();
+            leftBooster.Stop();
         }
     }
 
