@@ -1,8 +1,10 @@
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class CollisionHandler : MonoBehaviour
 {
+    int nextlevel;
     void OnCollisionEnter(Collision other)
     {
         switch (other.gameObject.tag)
@@ -12,16 +14,31 @@ public class CollisionHandler : MonoBehaviour
             break;
 
             case "Finish":
-            Debug.Log("Finish");
-            break;
-
-            case "Fuel":
-            Debug.Log("Fuel");
+            nextlevel ++;
+            NextLevel();
             break;
 
             default:
-            Debug.Log("Crashed");
+            ReloadLevel();
             break;
+        }
+
+        void ReloadLevel()
+        {
+            int CurrentScene = SceneManager.GetActiveScene().buildIndex;
+            SceneManager.LoadScene(CurrentScene);
+        }
+        void NextLevel()
+        {
+            int CurrentScene = SceneManager.GetActiveScene().buildIndex;
+            int nextScene = CurrentScene + 1;
+
+            if (nextScene == SceneManager.sceneCountInBuildSettings)
+            {
+                nextScene = 0;
+            }
+
+            SceneManager.LoadScene(nextScene);
         }
     }
 }
