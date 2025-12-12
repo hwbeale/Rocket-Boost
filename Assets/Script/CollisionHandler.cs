@@ -1,10 +1,11 @@
+using System;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class CollisionHandler : MonoBehaviour
 {
-    int nextlevel;
+    [SerializeField]float delay = 2f;
     void OnCollisionEnter(Collision other)
     {
         switch (other.gameObject.tag)
@@ -14,31 +15,42 @@ public class CollisionHandler : MonoBehaviour
             break;
 
             case "Finish":
-            nextlevel ++;
-            NextLevel();
+            FinishSequence();
             break;
 
             default:
-            ReloadLevel();
+            StartCrashSequence();
             break;
         }
-
-        void ReloadLevel()
-        {
-            int CurrentScene = SceneManager.GetActiveScene().buildIndex;
-            SceneManager.LoadScene(CurrentScene);
-        }
-        void NextLevel()
-        {
-            int CurrentScene = SceneManager.GetActiveScene().buildIndex;
-            int nextScene = CurrentScene + 1;
-
-            if (nextScene == SceneManager.sceneCountInBuildSettings)
-            {
-                nextScene = 0;
-            }
-
-            SceneManager.LoadScene(nextScene);
-        }
     }
+
+    private void FinishSequence()
+    {
+        GetComponent<Movement>().enabled = false;
+        Invoke("NextLevel", delay);
+    }
+
+    void StartCrashSequence()
+    {
+        GetComponent<Movement>().enabled = false;
+        Invoke ("ReloadLevel", delay);
+    }
+
+    void ReloadLevel()
+    {
+        int CurrentScene = SceneManager.GetActiveScene().buildIndex;
+        SceneManager.LoadScene(CurrentScene);
+    }
+    void NextLevel()
+    {
+        int CurrentScene = SceneManager.GetActiveScene().buildIndex;
+        int nextScene = CurrentScene + 1;
+
+        if (nextScene == SceneManager.sceneCountInBuildSettings)
+        {
+            nextScene = 0;
+        }
+
+        SceneManager.LoadScene(nextScene);
+        }
 }
