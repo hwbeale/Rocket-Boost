@@ -6,6 +6,7 @@ public class Rotation : MonoBehaviour
     [SerializeField] float xRotate;
     [SerializeField] float yRotate;
     [SerializeField] float zRotate;
+    [SerializeField] float speed = 100;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
